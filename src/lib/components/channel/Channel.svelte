@@ -45,6 +45,7 @@
 	let typingUsersTimeout = {};
 
 	let socketEventUnsubscribe = null;
+	let prevSock = null;
 
 	$: if (id) {
 		initHandler();
@@ -255,8 +256,12 @@
 			if (sock) {
 				sock.off('events:channel', channelEventHandler);
 				sock.on('events:channel', channelEventHandler);
-				// Rejoin channel rooms after reconnect or new channel creation.
-				sock.emit('join-channels', { auth: { token: localStorage.token } });
+				// Only emit join-channels when the socket instance changes (new connection
+				// or reconnect), not on every store update.
+				if (sock !== prevSock) {
+					sock.emit('join-channels', { auth: { token: localStorage.token } });
+					prevSock = sock;
+				}
 			}
 		});
 

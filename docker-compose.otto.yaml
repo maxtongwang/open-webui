@@ -12,7 +12,7 @@ services:
     environment:
       - OPENAI_API_BASE_URL=http://host.docker.internal:18789/v1
       - OPENAI_API_KEY=${OPENCLAW_GATEWAY_TOKEN}
-      - ENABLE_FORWARD_USER_INFO_HEADERS=true
+      - ENABLE_FORWARD_USER_INFO_HEADERS=true  # safe: service is behind Cloudflare Tunnel (trusted proxy)
       - WEBUI_AUTH=true
       - WEBUI_NAME=Otto
       - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
