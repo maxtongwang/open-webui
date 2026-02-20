@@ -34,8 +34,8 @@ html {
 /* Amber accent on active sidebar chat items */
 html.dark .conv-item.active,
 html.dark [aria-current='page'] {
-	background: rgba(255, 170, 44, 0.08) !important;
-	border-color: rgba(255, 170, 44, 0.15) !important;
+	background: var(--color-accent-glow) !important;
+	border-color: var(--color-border-accent) !important;
 }
 
 /* Amber send button in dark mode */
