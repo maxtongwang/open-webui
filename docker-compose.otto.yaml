@@ -16,7 +16,7 @@ services:
       - WEBUI_AUTH=true
       - WEBUI_NAME=Otto
       - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
-      - WEBUI_URL=${WEBUI_URL:-http://localhost:3100}
+      - WEBUI_URL=${WEBUI_URL:-http://localhost:3001}
       - DEFAULT_MODELS=${OPENCLAW_DEFAULT_MODEL:-claude-opus-4-6}
       - ENABLE_OLLAMA_API=false
       - ENABLE_CHANNELS=true
