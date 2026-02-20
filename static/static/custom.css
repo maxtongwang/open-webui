@@ -6,8 +6,8 @@ html.dark {
 	--color-gray-800: #18202c; /* bg-elevated: modals, dropdowns */
 	--color-gray-700: #1f2a38; /* bg-overlay: tooltips */
 	--color-gray-600: #243040; /* bg-hover */
-	--color-gray-500: #8a9bb0; /* text-secondary */
-	--color-gray-400: #4e6178; /* text-muted */
+	--color-gray-500: #4e6178; /* text-muted */
+	--color-gray-400: #8a9bb0; /* text-secondary */
 	--color-gray-200: #e8eff7; /* text-primary */
 	--color-gray-100: #e8eff7;
 
@@ -16,14 +16,6 @@ html.dark {
 	--color-accent-dim: #d98a18;
 	--color-accent-glow: rgba(255, 170, 44, 0.18);
 	--color-border-accent: rgba(255, 170, 44, 0.12);
-
-	/* Splash screen */
-	background-color: #0b0f14;
-}
-
-/* Splash screen background override */
-html.dark #splash-screen {
-	background: #0b0f14 !important;
 }
 
 /* IBM Plex font family override */
@@ -47,12 +39,10 @@ html.dark [aria-current='page'] {
 }
 
 /* Amber send button in dark mode */
-html.dark #send-message-button,
-html.dark button[aria-label='Send message'] {
+html.dark #send-message-button {
 	background: var(--color-accent) !important;
 	color: #0b0f14 !important;
 }
-html.dark #send-message-button:hover,
-html.dark button[aria-label='Send message']:hover {
+html.dark #send-message-button:hover {
 	background: var(--color-accent-dim) !important;
 }
