@@ -259,8 +259,34 @@
 							$i18n.t('Unknown User')}
 					</div>
 
-					<div class="italic text-sm text-gray-500 dark:text-gray-400 line-clamp-1 w-full flex-1">
-						<Markdown id={`${message.id}-reply-to`} content={message?.reply_to_message?.content} />
+					<div class="flex items-center gap-1.5 w-full flex-1 min-w-0">
+						{#if (message?.reply_to_message?.data?.files ?? []).length > 0}
+							{@const firstFile = message.reply_to_message.data.files[0]}
+							{#if firstFile?.id && (firstFile?.content_type ?? '').startsWith('image/')}
+								<!-- svelte-ignore a11y-click-events-have-key-events -->
+								<!-- svelte-ignore a11y-no-static-element-interactions -->
+								<div on:click|stopPropagation class="shrink-0">
+									<Image
+										src={`${WEBUI_API_BASE_URL}/files/${firstFile.id}/content`}
+										alt={$i18n.t('Quoted image')}
+										imageClassName="size-4 rounded object-cover"
+										className="!outline-none"
+									/>
+								</div>
+							{:else}
+								<span class="shrink-0 text-xs text-gray-500 dark:text-gray-400 italic">{$i18n.t('Attachment')}</span>
+							{/if}
+						{/if}
+						{#if message?.reply_to_message?.content}
+							<div class="markdown-prose prose-sm max-w-none flex-1 min-w-0 line-clamp-1">
+								<Markdown
+									id={`${message.id}-reply-to`}
+									content={message.reply_to_message.content}
+									paragraphTag="span"
+									editCodeBlock={false}
+								/>
+							</div>
+						{/if}
 					</div>
 				</button>
 			</div>

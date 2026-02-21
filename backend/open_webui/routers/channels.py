@@ -8,7 +8,6 @@ from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Request, status, BackgroundTasks
 from fastapi.responses import Response, StreamingResponse, FileResponse
 from pydantic import BaseModel
-from pydantic import field_validator
 
 from open_webui.socket.main import (
     emit_to_users,
@@ -778,16 +777,7 @@ async def delete_channel_by_id(
 
 
 class MessageUserResponse(MessageResponse):
-    data: bool | None = None
-
-    @field_validator("data", mode="before")
-    def convert_data_to_bool(cls, v):
-        # No data or not a dict → False
-        if not isinstance(v, dict):
-            return False
-
-        # True if ANY value in the dict is non-empty
-        return any(bool(val) for val in v.values())
+    pass
 
 
 @router.get("/{id}/messages", response_model=list[MessageUserResponse])

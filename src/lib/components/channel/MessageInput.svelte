@@ -781,7 +781,7 @@
 							{#if replyToMessage !== null}
 								<div class="px-3 pt-3 text-left w-full flex flex-col z-10">
 									<div class="flex items-center justify-between w-full">
-										<div class="pl-[1px] flex items-center gap-2 text-sm">
+										<div class="pl-[1px] flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
 											<div class="translate-y-[0.5px]">
 												<span class=""
 													>{$i18n.t('Replying to {{NAME}}', {
@@ -801,6 +801,28 @@
 											</button>
 										</div>
 									</div>
+									{#if (replyToMessage?.data?.files ?? []).length > 0}
+										{@const firstFile = replyToMessage.data.files[0]}
+										{#if firstFile?.id && (firstFile?.content_type ?? '').startsWith('image/')}
+											<div class="mt-1">
+												<Image
+													src={`${WEBUI_API_BASE_URL}/files/${firstFile.id}/content`}
+													alt={$i18n.t('Quoted image')}
+													imageClassName="size-8 rounded object-cover"
+													className="!outline-none"
+												/>
+											</div>
+										{:else}
+											<div class="pl-[1px] mt-0.5 text-xs text-gray-500 dark:text-gray-400 italic">
+												{$i18n.t('Attachment')}
+											</div>
+										{/if}
+									{/if}
+									{#if replyToMessage?.content}
+										<div class="pl-[1px] mt-0.5 text-xs text-gray-500 dark:text-gray-400 italic line-clamp-1">
+											{replyToMessage.content}
+										</div>
+									{/if}
 								</div>
 							{/if}
 
