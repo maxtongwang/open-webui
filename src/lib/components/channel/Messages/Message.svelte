@@ -263,18 +263,16 @@
 						{#if (message?.reply_to_message?.data?.files ?? []).length > 0}
 							{@const firstFile = message.reply_to_message.data.files[0]}
 							{#if (firstFile?.content_type ?? '').startsWith('image/')}
-								<a
-									href={`${WEBUI_API_BASE_URL}/files/${firstFile.id}/content`}
-									target="_blank"
-									rel="noopener"
-									on:click|stopPropagation
-								>
-									<img
+								<!-- svelte-ignore a11y-click-events-have-key-events -->
+								<!-- svelte-ignore a11y-no-static-element-interactions -->
+								<div on:click|stopPropagation class="shrink-0">
+									<Image
 										src={`${WEBUI_API_BASE_URL}/files/${firstFile.id}/content`}
 										alt=""
-										class="size-4 shrink-0 rounded object-cover"
+										imageClassName="size-4 rounded object-cover"
+										className="!outline-none"
 									/>
-								</a>
+								</div>
 							{:else}
 								<span class="shrink-0 text-xs text-gray-500 dark:text-gray-400 italic">{$i18n.t('Attachment')}</span>
 							{/if}
