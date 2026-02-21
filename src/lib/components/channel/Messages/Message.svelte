@@ -259,7 +259,7 @@
 							$i18n.t('Unknown User')}
 					</div>
 
-					<div class="flex items-center gap-1.5 italic text-sm text-gray-500 dark:text-gray-400 w-full flex-1 min-w-0">
+					<div class="flex items-center gap-1.5 w-full flex-1 min-w-0">
 						{#if (message?.reply_to_message?.data?.files ?? []).length > 0}
 							{@const firstFile = message.reply_to_message.data.files[0]}
 							{#if (firstFile?.content_type ?? '').startsWith('image/')}
@@ -276,18 +276,18 @@
 									/>
 								</a>
 							{:else}
-								<span class="shrink-0">{$i18n.t('Attachment')}</span>
+								<span class="shrink-0 text-xs text-gray-500 dark:text-gray-400 italic">{$i18n.t('Attachment')}</span>
 							{/if}
 						{/if}
 						{#if message?.reply_to_message?.content}
-							<span class="truncate">
+							<div class="markdown-prose prose-sm max-w-none flex-1 min-w-0 line-clamp-1">
 								<Markdown
 									id={`${message.id}-reply-to`}
 									content={message.reply_to_message.content}
 									paragraphTag="span"
 									editCodeBlock={false}
 								/>
-							</span>
+							</div>
 						{/if}
 					</div>
 				</button>
