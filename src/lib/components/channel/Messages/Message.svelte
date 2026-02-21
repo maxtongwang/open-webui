@@ -262,13 +262,13 @@
 					<div class="flex items-center gap-1.5 w-full flex-1 min-w-0">
 						{#if (message?.reply_to_message?.data?.files ?? []).length > 0}
 							{@const firstFile = message.reply_to_message.data.files[0]}
-							{#if (firstFile?.content_type ?? '').startsWith('image/')}
+							{#if firstFile?.id && (firstFile?.content_type ?? '').startsWith('image/')}
 								<!-- svelte-ignore a11y-click-events-have-key-events -->
 								<!-- svelte-ignore a11y-no-static-element-interactions -->
 								<div on:click|stopPropagation class="shrink-0">
 									<Image
 										src={`${WEBUI_API_BASE_URL}/files/${firstFile.id}/content`}
-										alt=""
+										alt={$i18n.t('Quoted image')}
 										imageClassName="size-4 rounded object-cover"
 										className="!outline-none"
 									/>

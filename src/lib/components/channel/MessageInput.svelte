@@ -803,11 +803,11 @@
 									</div>
 									{#if (replyToMessage?.data?.files ?? []).length > 0}
 										{@const firstFile = replyToMessage.data.files[0]}
-										{#if (firstFile?.content_type ?? '').startsWith('image/')}
+										{#if firstFile?.id && (firstFile?.content_type ?? '').startsWith('image/')}
 											<div class="mt-1">
 												<Image
 													src={`${WEBUI_API_BASE_URL}/files/${firstFile.id}/content`}
-													alt=""
+													alt={$i18n.t('Quoted image')}
 													imageClassName="size-8 rounded object-cover"
 													className="!outline-none"
 												/>
