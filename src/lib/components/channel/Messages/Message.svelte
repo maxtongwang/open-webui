@@ -259,22 +259,29 @@
 							$i18n.t('Unknown User')}
 					</div>
 
-					<div class="italic text-sm text-gray-500 dark:text-gray-400 line-clamp-1 w-full flex-1">
+					<div class="flex items-center gap-1.5 italic text-sm text-gray-500 dark:text-gray-400 w-full flex-1 min-w-0">
 						{#if (message?.reply_to_message?.data?.files ?? []).length > 0}
-						{@const firstFile = message.reply_to_message.data.files[0]}
-						{#if (firstFile?.content_type ?? '').startsWith('image/')}
-							<img
-								src={`${WEBUI_API_BASE_URL}/files/${firstFile.id}/content`}
-								alt=""
-								class="size-4 inline rounded object-cover mr-1"
-							/>
-						{:else}
-							<span class="mr-1">{$i18n.t('Attachment')}</span>
+							{@const firstFile = message.reply_to_message.data.files[0]}
+							{#if (firstFile?.content_type ?? '').startsWith('image/')}
+								<a
+									href={`${WEBUI_API_BASE_URL}/files/${firstFile.id}/content`}
+									target="_blank"
+									rel="noopener"
+									on:click|stopPropagation
+								>
+									<img
+										src={`${WEBUI_API_BASE_URL}/files/${firstFile.id}/content`}
+										alt=""
+										class="size-4 shrink-0 rounded object-cover"
+									/>
+								</a>
+							{:else}
+								<span class="shrink-0">{$i18n.t('Attachment')}</span>
+							{/if}
 						{/if}
-					{/if}
-					{#if message?.reply_to_message?.content}
-						{message.reply_to_message.content}
-					{/if}
+						{#if message?.reply_to_message?.content}
+							<span class="truncate">{message.reply_to_message.content}</span>
+						{/if}
 					</div>
 				</button>
 			</div>

@@ -804,13 +804,18 @@
 									{#if (replyToMessage?.data?.files ?? []).length > 0}
 										{@const firstFile = replyToMessage.data.files[0]}
 										{#if (firstFile?.content_type ?? '').startsWith('image/')}
-											<div class="mt-1">
+											<a
+												href={`${WEBUI_API_BASE_URL}/files/${firstFile.id}/content`}
+												target="_blank"
+												rel="noopener"
+												class="mt-1 block"
+											>
 												<img
 													src={`${WEBUI_API_BASE_URL}/files/${firstFile.id}/content`}
 													alt=""
 													class="size-8 rounded object-cover"
 												/>
-											</div>
+											</a>
 										{:else}
 											<div class="pl-[1px] mt-0.5 text-xs text-gray-500 dark:text-gray-400 italic">
 												{$i18n.t('Attachment')}
