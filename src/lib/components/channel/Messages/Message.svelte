@@ -280,7 +280,14 @@
 							{/if}
 						{/if}
 						{#if message?.reply_to_message?.content}
-							<span class="truncate">{message.reply_to_message.content}</span>
+							<span class="truncate">
+								<Markdown
+									id={`${message.id}-reply-to`}
+									content={message.reply_to_message.content}
+									paragraphTag="span"
+									editCodeBlock={false}
+								/>
+							</span>
 						{/if}
 					</div>
 				</button>
