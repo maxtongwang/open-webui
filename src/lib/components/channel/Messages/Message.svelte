@@ -273,7 +273,7 @@
 						{/if}
 					{/if}
 					{#if message?.reply_to_message?.content}
-						<Markdown id={`${message.id}-reply-to`} content={message?.reply_to_message?.content} />
+						{message.reply_to_message.content}
 					{/if}
 					</div>
 				</button>
