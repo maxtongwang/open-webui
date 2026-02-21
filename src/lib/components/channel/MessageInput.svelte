@@ -801,11 +801,7 @@
 											</button>
 										</div>
 									</div>
-									{#if replyToMessage?.content}
-										<div class="pl-[1px] mt-0.5 text-xs text-gray-500 dark:text-gray-400 italic line-clamp-1">
-											{replyToMessage.content}
-										</div>
-									{:else if (replyToMessage?.data?.files ?? []).length > 0}
+									{#if (replyToMessage?.data?.files ?? []).length > 0}
 										{@const firstFile = replyToMessage.data.files[0]}
 										{#if (firstFile?.content_type ?? '').startsWith('image/')}
 											<div class="mt-1">
@@ -820,6 +816,11 @@
 												{$i18n.t('Attachment')}
 											</div>
 										{/if}
+									{/if}
+									{#if replyToMessage?.content}
+										<div class="pl-[1px] mt-0.5 text-xs text-gray-500 dark:text-gray-400 italic line-clamp-1">
+											{replyToMessage.content}
+										</div>
 									{/if}
 								</div>
 							{/if}

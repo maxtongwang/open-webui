@@ -266,12 +266,13 @@
 							<img
 								src={`${WEBUI_API_BASE_URL}/files/${firstFile.id}/content`}
 								alt=""
-								class="size-4 inline rounded object-cover"
+								class="size-4 inline rounded object-cover mr-1"
 							/>
 						{:else}
-							{$i18n.t('Attachment')}
+							<span class="mr-1">{$i18n.t('Attachment')}</span>
 						{/if}
-					{:else}
+					{/if}
+					{#if message?.reply_to_message?.content}
 						<Markdown id={`${message.id}-reply-to`} content={message?.reply_to_message?.content} />
 					{/if}
 					</div>
