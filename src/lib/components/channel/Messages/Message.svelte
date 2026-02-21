@@ -260,7 +260,20 @@
 					</div>
 
 					<div class="italic text-sm text-gray-500 dark:text-gray-400 line-clamp-1 w-full flex-1">
+						{#if (message?.reply_to_message?.data?.files ?? []).length > 0}
+						{@const firstFile = message.reply_to_message.data.files[0]}
+						{#if (firstFile?.content_type ?? '').startsWith('image/')}
+							<img
+								src={`${WEBUI_API_BASE_URL}/files/${firstFile.id}/content`}
+								alt=""
+								class="size-4 inline rounded object-cover"
+							/>
+						{:else}
+							{$i18n.t('Attachment')}
+						{/if}
+					{:else}
 						<Markdown id={`${message.id}-reply-to`} content={message?.reply_to_message?.content} />
+					{/if}
 					</div>
 				</button>
 			</div>

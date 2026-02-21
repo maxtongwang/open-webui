@@ -123,7 +123,7 @@ class MessageUserSlimResponse(MessageUserResponse):
 
 
 class MessageReplyToResponse(MessageUserResponse):
-    reply_to_message: Optional[MessageUserSlimResponse] = None
+    reply_to_message: Optional[MessageUserResponse] = None
 
 
 class MessageWithReactionsResponse(MessageUserSlimResponse):

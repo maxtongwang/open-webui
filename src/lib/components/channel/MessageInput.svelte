@@ -806,9 +806,20 @@
 											{replyToMessage.content}
 										</div>
 									{:else if (replyToMessage?.data?.files ?? []).length > 0}
-										<div class="pl-[1px] mt-0.5 text-xs text-gray-500 dark:text-gray-400 italic">
-											{$i18n.t('Image')}
-										</div>
+										{@const firstFile = replyToMessage.data.files[0]}
+										{#if (firstFile?.content_type ?? '').startsWith('image/')}
+											<div class="mt-1">
+												<img
+													src={`${WEBUI_API_BASE_URL}/files/${firstFile.id}/content`}
+													alt=""
+													class="size-8 rounded object-cover"
+												/>
+											</div>
+										{:else}
+											<div class="pl-[1px] mt-0.5 text-xs text-gray-500 dark:text-gray-400 italic">
+												{$i18n.t('Attachment')}
+											</div>
+										{/if}
 									{/if}
 								</div>
 							{/if}
