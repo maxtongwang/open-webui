@@ -5,6 +5,10 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 cd "$PROJECT_DIR"
 
+if [ ! -f .env.otto ]; then
+	echo "ERROR: .env.otto not found. Copy .env.otto.example and fill in your values." >&2
+	exit 1
+fi
 source .env.otto
 
 BRANCH=$(git branch --show-current 2>/dev/null || echo "unknown")
@@ -19,18 +23,15 @@ for arg in "$@"; do
 	[[ "$arg" == --dir=* ]]     && SCREENSHOT_DIR="${arg#--dir=}"
 done
 
-# Post header message
+# Post header message using jq for safe JSON construction
 HEADER_RESP=$(curl -s -X POST \
 	"${OTTO_BASE_URL}/api/v1/channels/${OTTO_DEV_CHANNEL_ID}/messages/post" \
 	-H "Authorization: Bearer ${OTTO_API_TOKEN}" \
 	-H "Content-Type: application/json" \
-	-d "{\"content\": \"📸 Screenshots — branch \`${BRANCH}\` @ ${TIMESTAMP}\"}")
+	-d "$(jq -n --arg content "📸 Screenshots — branch \`${BRANCH}\` @ ${TIMESTAMP}" '{content: $content}')")
 
-# Anchor: nanosecond timestamp from header message
-POSTED_AT=$(echo "$HEADER_RESP" | jq -r '.created_at // empty')
-if [ -z "$POSTED_AT" ]; then
-	POSTED_AT=$(( $(date +%s) * 1000000000 ))
-fi
+# Anchor: nanosecond timestamp (matches Open WebUI's created_at field unit)
+POSTED_AT=$(( $(date +%s) * 1000000000 ))
 
 # Upload + post each screenshot (recursive search in dir)
 FOUND=0
@@ -53,7 +54,11 @@ while IFS= read -r -d '' SHOT; do
 		"${OTTO_BASE_URL}/api/v1/channels/${OTTO_DEV_CHANNEL_ID}/messages/post" \
 		-H "Authorization: Bearer ${OTTO_API_TOKEN}" \
 		-H "Content-Type: application/json" \
-		-d "{\"content\":\"\`${NAME}\`\",\"data\":{\"files\":[{\"id\":\"${FILE_ID}\",\"type\":\"image\",\"url\":\"/api/v1/files/${FILE_ID}/content\"}]}}" \
+		-d "$(jq -n \
+			--arg name "$NAME" \
+			--arg id "$FILE_ID" \
+			--arg url "/api/v1/files/${FILE_ID}/content" \
+			'{content: ("`" + $name + "`"), data: {files: [{id: $id, type: "image", url: $url}]}}')" \
 		> /dev/null
 
 	>&2 echo "Posted: $NAME"
@@ -64,7 +69,7 @@ if [ "$FOUND" -eq 0 ]; then
 	exit 1
 fi
 
-# Update anchor to now (after all screenshots posted)
+# Update anchor to after all screenshots were posted
 POSTED_AT=$(( $(date +%s) * 1000000000 ))
 
 if $NO_WAIT; then
@@ -77,7 +82,7 @@ fi
 ELAPSED=0
 while [ "$ELAPSED" -lt "$POLL_TIMEOUT" ]; do
 	MSGS=$(curl -s \
-		"${OTTO_BASE_URL}/api/v1/channels/${OTTO_DEV_CHANNEL_ID}/messages?skip=0&limit=10" \
+		"${OTTO_BASE_URL}/api/v1/channels/${OTTO_DEV_CHANNEL_ID}/messages?skip=0&limit=50" \
 		-H "Authorization: Bearer ${OTTO_API_TOKEN}")
 
 	FEEDBACK=$(echo "$MSGS" | jq -r --argjson after "$POSTED_AT" '

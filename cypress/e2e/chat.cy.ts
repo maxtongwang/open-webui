@@ -13,13 +13,20 @@ const PROMPTS = [
 
 /**
  * Send a message and wait until the assistant finishes responding.
- * The Copy button (aria-label="Copy") only renders when message.done is true.
+ * Tracks total exchange count so each call waits for exactly one new Copy button
+ * to appear (Copy only renders when message.done is true in ResponseMessage.svelte).
  */
+let exchangeCount = 0;
 const exchange = (text: string) => {
+	exchangeCount++;
+	const expected = exchangeCount;
 	cy.get('#chat-input').type(text, { force: true });
 	cy.get('button[type="submit"]').click();
-	cy.get('.chat-user').should('exist');
-	cy.get('.chat-assistant button[aria-label="Copy"]', { timeout: 120_000 }).last().should('exist');
+	cy.get('.chat-user').should('have.length.at.least', expected);
+	cy.get('.chat-assistant button[aria-label="Copy"]', { timeout: 120_000 }).should(
+		'have.length.at.least',
+		expected
+	);
 };
 
 describe('Chat', () => {

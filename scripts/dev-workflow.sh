@@ -5,6 +5,10 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 cd "$PROJECT_DIR"
 
+if [ ! -f .env.otto ]; then
+	echo "ERROR: .env.otto not found. Copy .env.otto.example and fill in your values." >&2
+	exit 1
+fi
 source .env.otto
 
 SCREENSHOT_ONLY=false
@@ -23,7 +27,11 @@ if ! $SCREENSHOT_ONLY; then
 	npm run test:frontend
 
 	echo "=== 3. Cypress E2E ==="
-	CYPRESS_BASE_URL="${OTTO_BASE_URL:-http://localhost:3100}" npx cypress run || true
+	E2E_EXIT=0
+	CYPRESS_BASE_URL="${OTTO_BASE_URL:-http://localhost:3100}" npx cypress run || E2E_EXIT=$?
+	if [ "$E2E_EXIT" -ne 0 ]; then
+		echo "WARNING: Cypress E2E tests failed (exit $E2E_EXIT) — proceeding to screenshots" >&2
+	fi
 fi
 
 echo "=== 4. Screenshots ==="
@@ -33,7 +41,7 @@ CYPRESS_BASE_URL="${OTTO_BASE_URL:-http://localhost:3100}" npx cypress run \
 
 if ! $NO_POST; then
 	echo "=== 5. Post + wait for feedback ==="
-	FEEDBACK=$(bash scripts/post-channel.sh)
+	FEEDBACK=$(bash scripts/post-channel.sh --dir=cypress/screenshots)
 	echo ""
 	echo "=== USER FEEDBACK ==="
 	echo "$FEEDBACK"
