@@ -73,6 +73,9 @@ with sync_playwright() as p:
     ctx = browser.new_context(viewport={"width": 1440, "height": 900})
     page = ctx.new_page()
 
+    # Block remote fonts to prevent screenshot stalling on font-load
+    page.route("**/*.{woff,woff2,ttf,otf}", lambda route: route.abort())
+
     # Bootstrap: visit app and set auth token in localStorage
     page.goto(BASE_URL)
     page.wait_for_load_state("load")
