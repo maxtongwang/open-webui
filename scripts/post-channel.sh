@@ -16,7 +16,7 @@ TIMESTAMP=$(date "+%Y-%m-%d %H:%M")
 POLL_INTERVAL=15   # seconds between polls
 POLL_TIMEOUT=3600  # 60 min max wait
 NO_WAIT=false
-SCREENSHOT_DIR="cypress/screenshots/screenshots.cy.ts"
+SCREENSHOT_DIR="playwright-screenshots"
 
 for arg in "$@"; do
 	[[ "$arg" == "--no-wait" ]] && NO_WAIT=true

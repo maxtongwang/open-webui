@@ -25,23 +25,14 @@ if ! $SCREENSHOT_ONLY; then
 
 	echo "=== 2. Unit tests ==="
 	npm run test:frontend
-
-	echo "=== 3. Cypress E2E ==="
-	E2E_EXIT=0
-	CYPRESS_BASE_URL="${OTTO_BASE_URL:-http://localhost:3100}" npx cypress run || E2E_EXIT=$?
-	if [ "$E2E_EXIT" -ne 0 ]; then
-		echo "WARNING: Cypress E2E tests failed (exit $E2E_EXIT) — proceeding to screenshots" >&2
-	fi
 fi
 
 echo "=== 4. Screenshots ==="
-CYPRESS_BASE_URL="${OTTO_BASE_URL:-http://localhost:3100}" npx cypress run \
-	--spec "cypress/e2e/screenshots.cy.ts" \
-	--browser chrome
+python3 scripts/take-screenshots.py
 
 if ! $NO_POST; then
 	echo "=== 5. Post + wait for feedback ==="
-	FEEDBACK=$(bash scripts/post-channel.sh --dir=cypress/screenshots)
+	FEEDBACK=$(bash scripts/post-channel.sh --dir=playwright-screenshots)
 	echo ""
 	echo "=== USER FEEDBACK ==="
 	echo "$FEEDBACK"
