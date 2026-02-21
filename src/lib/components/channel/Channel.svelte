@@ -46,6 +46,7 @@
 
 	let socketEventUnsubscribe = null;
 	let prevSock = null;
+	let pollIntervalId = null;
 
 	$: if (id) {
 		initHandler();
@@ -265,6 +266,23 @@
 			}
 		});
 
+		// Fallback polling — catches messages missed when Socket.IO long-poll
+		// is buffered by an intermediate proxy (e.g. Cloudflare Tunnel).
+		pollIntervalId = setInterval(async () => {
+			if (!id || !messages) return;
+			const latest = await getChannelMessages(localStorage.token, id, 0).catch(() => null);
+			if (!latest) return;
+			const knownIds = new Set(messages.map((m) => m.id));
+			const newMessages = latest.filter((m) => !knownIds.has(m.id));
+			if (newMessages.length > 0) {
+				messages = [...newMessages, ...messages];
+				if (scrollEnd) {
+					await tick();
+					scrollToBottom();
+				}
+			}
+		}, 10_000);
+
 		mediaQuery = window.matchMedia('(min-width: 1024px)');
 
 		const handleMediaQuery = async (e) => {
@@ -285,6 +303,7 @@
 		_channelId.set(null);
 		socketEventUnsubscribe?.();
 		$socket?.off('events:channel', channelEventHandler);
+		if (pollIntervalId) clearInterval(pollIntervalId);
 	});
 </script>
 

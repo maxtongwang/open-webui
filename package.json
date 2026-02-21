@@ -21,7 +21,8 @@
 		"test:frontend": "vitest --passWithNoTests",
 		"pyodide:fetch": "node scripts/prepare-pyodide.js",
 		"dev:workflow": "bash scripts/dev-workflow.sh",
-		"screenshot": "bash scripts/dev-workflow.sh --screenshot-only"
+		"screenshot": "bash scripts/dev-workflow.sh --screenshot-only",
+		"check-feedback": "bash scripts/check-feedback.sh"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "3.2.2",

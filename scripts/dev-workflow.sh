@@ -31,10 +31,8 @@ echo "=== 4. Screenshots ==="
 python3 scripts/take-screenshots.py
 
 if ! $NO_POST; then
-	echo "=== 5. Post + wait for feedback ==="
-	FEEDBACK=$(bash scripts/post-channel.sh --dir=playwright-screenshots)
+	echo "=== 5. Post screenshots ==="
+	bash scripts/post-channel.sh --dir=playwright-screenshots >&2
 	echo ""
-	echo "=== USER FEEDBACK ==="
-	echo "$FEEDBACK"
-	echo "====================="
+	echo "Screenshots posted. Run 'npm run check-feedback' to read replies."
 fi
