@@ -57,8 +57,7 @@ while IFS= read -r -d '' SHOT; do
 		-d "$(jq -n \
 			--arg name "$NAME" \
 			--arg id "$FILE_ID" \
-			--arg url "/api/v1/files/${FILE_ID}/content" \
-			'{content: ("`" + $name + "`"), data: {files: [{id: $id, type: "image", url: $url}]}}')" \
+			'{content: ("`" + $name + "`"), data: {files: [{id: $id, type: "image", url: $id, content_type: "image/png"}]}}')" \
 		> /dev/null
 
 	>&2 echo "Posted: $NAME"
