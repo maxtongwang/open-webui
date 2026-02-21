@@ -781,7 +781,7 @@
 							{#if replyToMessage !== null}
 								<div class="px-3 pt-3 text-left w-full flex flex-col z-10">
 									<div class="flex items-center justify-between w-full">
-										<div class="pl-[1px] flex items-center gap-2 text-sm">
+										<div class="pl-[1px] flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
 											<div class="translate-y-[0.5px]">
 												<span class=""
 													>{$i18n.t('Replying to {{NAME}}', {
@@ -801,6 +801,15 @@
 											</button>
 										</div>
 									</div>
+									{#if replyToMessage?.content}
+										<div class="pl-[1px] mt-0.5 text-xs text-gray-500 dark:text-gray-400 italic line-clamp-1">
+											{replyToMessage.content}
+										</div>
+									{:else if (replyToMessage?.data?.files ?? []).length > 0}
+										<div class="pl-[1px] mt-0.5 text-xs text-gray-500 dark:text-gray-400 italic">
+											{$i18n.t('Image')}
+										</div>
+									{/if}
 								</div>
 							{/if}
 
