@@ -699,7 +699,10 @@
 	>
 		<button
 			class="flex flex-col flex-1 {isWindows ? 'cursor-pointer' : 'cursor-[e-resize]'}"
-			on:click={async () => {
+			on:click={(e) => {
+				e.stopPropagation();
+			}}
+			on:pointerup={() => {
 				showSidebar.set(!$showSidebar);
 			}}
 		>
@@ -734,13 +737,8 @@
 							class=" cursor-pointer flex rounded-xl hover:bg-gray-100 dark:hover:bg-gray-850 transition group"
 							href="/"
 							draggable="false"
-							on:click={async (e) => {
-								e.stopImmediatePropagation();
-								e.preventDefault();
-
-								goto('/');
-								newChatHandler();
-							}}
+							on:click|preventDefault|stopPropagation={() => {}}
+							on:pointerup|stopPropagation={() => { goto('/'); newChatHandler(); }}
 							aria-label={$i18n.t('New Chat')}
 						>
 							<div class=" self-center flex items-center justify-center size-9">
@@ -754,12 +752,8 @@
 					<Tooltip content={$i18n.t('Search')} placement="right">
 						<button
 							class=" cursor-pointer flex rounded-xl hover:bg-gray-100 dark:hover:bg-gray-850 transition group"
-							on:click={(e) => {
-								e.stopImmediatePropagation();
-								e.preventDefault();
-
-								showSearch.set(true);
-							}}
+							on:click|preventDefault|stopPropagation={() => {}}
+							on:pointerup|stopPropagation={() => { showSearch.set(true); }}
 							draggable="false"
 							aria-label={$i18n.t('Search')}
 						>
@@ -776,13 +770,8 @@
 							<a
 								class=" cursor-pointer flex rounded-xl hover:bg-gray-100 dark:hover:bg-gray-850 transition group"
 								href="/notes"
-								on:click={async (e) => {
-									e.stopImmediatePropagation();
-									e.preventDefault();
-
-									goto('/notes');
-									itemClickHandler();
-								}}
+								on:click|preventDefault|stopPropagation={() => {}}
+								on:pointerup|stopPropagation={() => { goto('/notes'); itemClickHandler(); }}
 								draggable="false"
 								aria-label={$i18n.t('Notes')}
 							>
@@ -800,13 +789,8 @@
 							<a
 								class=" cursor-pointer flex rounded-xl hover:bg-gray-100 dark:hover:bg-gray-850 transition group"
 								href="/workspace"
-								on:click={async (e) => {
-									e.stopImmediatePropagation();
-									e.preventDefault();
-
-									goto('/workspace');
-									itemClickHandler();
-								}}
+								on:click|preventDefault|stopPropagation={() => {}}
+								on:pointerup|stopPropagation={() => { goto('/workspace'); itemClickHandler(); }}
 								aria-label={$i18n.t('Workspace')}
 								draggable="false"
 							>
@@ -903,15 +887,71 @@
 			<div
 				class="sidebar px-[0.5625rem] pt-2 pb-1.5 flex justify-between space-x-1 text-gray-600 dark:text-gray-400 sticky top-0 z-10 -mb-3"
 			>
-				<a href="/" class="flex items-center gap-2 px-1 no-drag-region" on:click={newChatHandler} draggable="false">
-					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none" class="size-6 shrink-0">
-						<defs><radialGradient id="sg" cx="40%" cy="35%" r="65%"><stop offset="0%" stop-color="#FFAA2C"/><stop offset="100%" stop-color="#B8720E"/></radialGradient></defs>
-						<ellipse cx="22" cy="50" rx="6" ry="5" fill="#C47A10"/><ellipse cx="31" cy="55" rx="6" ry="5" fill="#FFAA2C"/><ellipse cx="40" cy="57" rx="6" ry="5" fill="#C47A10"/><ellipse cx="49" cy="55" rx="6" ry="5" fill="#FFAA2C"/><ellipse cx="58" cy="50" rx="6" ry="5" fill="#C47A10"/>
-						<ellipse cx="40" cy="34" rx="24" ry="22" fill="url(#sg)"/>
-						<ellipse cx="32" cy="23" rx="8" ry="4.5" fill="white" opacity="0.11" transform="rotate(-18 32 23)"/>
-						<circle cx="32" cy="35" r="3.2" fill="#3D2800"/><circle cx="33.2" cy="33.8" r="1.1" fill="white" opacity="0.85"/>
-						<circle cx="48" cy="35" r="3.2" fill="#3D2800"/><circle cx="49.2" cy="33.8" r="1.1" fill="white" opacity="0.85"/>
-						<path d="M35 42 Q40 46 45 42" stroke="#3D2800" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+				<a
+					href="/"
+					class="flex items-center gap-2 px-1 no-drag-region"
+					on:click={newChatHandler}
+					draggable="false"
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 80 80"
+						fill="none"
+						class="size-6 shrink-0"
+					>
+						<defs
+							><radialGradient id="sg" cx="40%" cy="35%" r="65%"
+								><stop offset="0%" stop-color="#FFAA2C" /><stop
+									offset="100%"
+									stop-color="#B8720E"
+								/></radialGradient
+							></defs
+						>
+						<ellipse cx="22" cy="50" rx="6" ry="5" fill="#C47A10" /><ellipse
+							cx="31"
+							cy="55"
+							rx="6"
+							ry="5"
+							fill="#FFAA2C"
+						/><ellipse cx="40" cy="57" rx="6" ry="5" fill="#C47A10" /><ellipse
+							cx="49"
+							cy="55"
+							rx="6"
+							ry="5"
+							fill="#FFAA2C"
+						/><ellipse cx="58" cy="50" rx="6" ry="5" fill="#C47A10" />
+						<ellipse cx="40" cy="34" rx="24" ry="22" fill="url(#sg)" />
+						<ellipse
+							cx="32"
+							cy="23"
+							rx="8"
+							ry="4.5"
+							fill="white"
+							opacity="0.11"
+							transform="rotate(-18 32 23)"
+						/>
+						<circle cx="32" cy="35" r="3.2" fill="#3D2800" /><circle
+							cx="33.2"
+							cy="33.8"
+							r="1.1"
+							fill="white"
+							opacity="0.85"
+						/>
+						<circle cx="48" cy="35" r="3.2" fill="#3D2800" /><circle
+							cx="49.2"
+							cy="33.8"
+							r="1.1"
+							fill="white"
+							opacity="0.85"
+						/>
+						<path
+							d="M35 42 Q40 46 45 42"
+							stroke="#3D2800"
+							stroke-width="1.5"
+							stroke-linecap="round"
+							fill="none"
+							opacity="0.5"
+						/>
 					</svg>
 					<div
 						id="sidebar-webui-name"
@@ -928,9 +968,8 @@
 						class="flex rounded-xl size-8.5 justify-center items-center hover:bg-gray-100/50 dark:hover:bg-gray-850/50 transition {isWindows
 							? 'cursor-pointer'
 							: 'cursor-[w-resize]'}"
-						on:click={() => {
-							showSidebar.set(!$showSidebar);
-						}}
+						on:click={(e) => { e.stopPropagation(); }}
+						on:pointerup={() => { showSidebar.set(!$showSidebar); }}
 						aria-label={$showSidebar ? $i18n.t('Close Sidebar') : $i18n.t('Open Sidebar')}
 					>
 						<div class=" self-center p-1.5">
@@ -982,9 +1021,8 @@
 						<button
 							id="sidebar-search-button"
 							class="group grow flex items-center space-x-3 rounded-2xl px-2.5 py-2 hover:bg-gray-100 dark:hover:bg-gray-900 transition outline-none"
-							on:click={() => {
-								showSearch.set(true);
-							}}
+							on:click={(e) => { e.stopPropagation(); }}
+							on:pointerup={() => { showSearch.set(true); }}
 							draggable="false"
 							aria-label={$i18n.t('Search')}
 						>
@@ -1005,12 +1043,16 @@
 								class="group flex items-center space-x-3 rounded-2xl px-2.5 py-2 hover:bg-gray-100 dark:hover:bg-gray-900 transition cursor-pointer"
 								role="button"
 								tabindex="0"
-								on:click={(e) => { e.stopPropagation(); }}
+								on:click={(e) => {
+									e.stopPropagation();
+								}}
 								on:pointerup={() => {
 									showFolders = !showFolders;
 									if (showFolders && Object.keys(folders).length === 0) initFolders();
 								}}
-								on:keydown={(e) => { if (e.key === 'Enter' || e.key === ' ') showFolders = !showFolders; }}
+								on:keydown={(e) => {
+									if (e.key === 'Enter' || e.key === ' ') showFolders = !showFolders;
+								}}
 								aria-expanded={showFolders}
 								aria-label={$i18n.t('Folders')}
 							>
@@ -1022,7 +1064,9 @@
 								</div>
 								<button
 									class="invisible group-hover:visible self-center p-0.5 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition"
-									on:click|stopPropagation={() => { showCreateFolderModal = true; }}
+									on:click|stopPropagation={() => {
+										showCreateFolderModal = true;
+									}}
 									on:pointerup|stopPropagation={() => {}}
 									aria-label={$i18n.t('New Folder')}
 								>
@@ -1039,12 +1083,16 @@
 											selectedFolder.set(null);
 											initChatList();
 										}}
-										on:update={() => { initChatList(); }}
+										on:update={() => {
+											initChatList();
+										}}
 										on:import={(e) => {
 											const { folderId, items } = e.detail;
 											importChatHandler(items, false, folderId);
 										}}
-										on:change={async () => { initChatList(); }}
+										on:change={async () => {
+											initChatList();
+										}}
 									/>
 								</div>
 							{/if}
@@ -1057,12 +1105,16 @@
 								class="group flex items-center space-x-3 rounded-2xl px-2.5 py-2 hover:bg-gray-100 dark:hover:bg-gray-900 transition cursor-pointer"
 								role="button"
 								tabindex="0"
-								on:click={(e) => { e.stopPropagation(); }}
+								on:click={(e) => {
+									e.stopPropagation();
+								}}
 								on:pointerup={() => {
 									showChannels = !showChannels;
 									if (showChannels && $channels.length === 0) initChannels();
 								}}
-								on:keydown={(e) => { if (e.key === 'Enter' || e.key === ' ') showChannels = !showChannels; }}
+								on:keydown={(e) => {
+									if (e.key === 'Enter' || e.key === ' ') showChannels = !showChannels;
+								}}
 								aria-expanded={showChannels}
 								aria-label={$i18n.t('Channels')}
 							>
@@ -1077,7 +1129,9 @@
 										class="invisible group-hover:visible self-center p-0.5 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition"
 										on:click|stopPropagation={async () => {
 											await tick();
-											setTimeout(() => { showCreateChannel = true; }, 0);
+											setTimeout(() => {
+												showCreateChannel = true;
+											}, 0);
 										}}
 										on:pointerup|stopPropagation={() => {}}
 										aria-label={$i18n.t('Create Channel')}
@@ -1091,7 +1145,9 @@
 									{#each $channels as channel, channelIdx (`${channel?.id}`)}
 										<ChannelItem
 											{channel}
-											onUpdate={async () => { await initChannels(); }}
+											onUpdate={async () => {
+												await initChannels();
+											}}
 										/>
 										{#if channelIdx < $channels.length - 1 && channel.type !== $channels[channelIdx + 1]?.type}
 											<hr class="border-gray-100/40 dark:border-gray-800/10 my-1.5 w-full" />
@@ -1190,10 +1246,6 @@
 						<PinnedModelList bind:selectedChatId {shiftKey} />
 					</Folder>
 				{/if}
-
-
-
-
 
 				<Folder
 					id="sidebar-chats"
